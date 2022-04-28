@@ -20,6 +20,10 @@ class AuthorTransformer extends TransformerAbstract
 
             $author = head($embedded['author']);
 
+            if ($author->code === 'rest_user_invalid_id') {
+                return [];
+            }
+
             return [
                 'wp_id'  => (int)$author->id,
                 'name'   => $author->name ?? null,
