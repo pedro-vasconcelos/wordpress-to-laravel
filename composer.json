@@ -19,7 +19,7 @@
     }
   ],
   "require": {
-    "php": "^7.3",
+    "php": "^8.1",
     "cartalyst/tags": ">=v8.0.0",
     "guzzlehttp/guzzle": "^7.0",
     "illuminate/database": "^8.0",
