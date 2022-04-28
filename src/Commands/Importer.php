@@ -52,9 +52,6 @@ class Importer extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @param WordpressToLaravel $wordpressToLaravel
-     * @param Dispatcher         $dispatcher
      */
     public function __construct(WordpressToLaravel $wordpressToLaravel, Dispatcher $dispatcher)
     {
@@ -79,7 +76,11 @@ class Importer extends Command
         $this->registerListeners();
 
         $this->wordpressToLaravel->import(
-            $postRestBase, $page, $perPage, $truncate, $forceAll
+            $postRestBase,
+            $page,
+            $perPage,
+            $truncate,
+            $forceAll
         );
 
         $this->outputCounts();
@@ -87,9 +88,9 @@ class Importer extends Command
 
     protected function checkIfTruncatingWithoutForceAll($truncate, $forceAll)
     {
-        if ($truncate && ! $forceAll && ! $this->confirm("Oops! Looks like you've passed the 'truncate' option (-T) but haven't passed the 'force-all' option (-F). This means we'll remove all posts etc from the local DB, and re-sync with just the first page of post results. Was this intentional?")) {
-
+        if ($truncate && !$forceAll && !$this->confirm("Oops! Looks like you've passed the 'truncate' option (-T) but haven't passed the 'force-all' option (-F). This means we'll remove all posts etc from the local DB, and re-sync with just the first page of post results. Was this intentional?")) {
             $this->info("In that case we'll bail. Try again with the correct options.");
+
             exit();
         }
     }
@@ -97,17 +98,17 @@ class Importer extends Command
     private function registerListeners()
     {
         $this->dispatcher->listen(PostImported::class, function (PostImported $event) {
-            $this->importedPostCount++;
+            ++$this->importedPostCount;
         });
 
         $this->dispatcher->listen(PostUpdated::class, function (PostUpdated $event) {
-            $this->updatedPostCount++;
+            ++$this->updatedPostCount;
         });
     }
 
     private function outputCounts()
     {
-        $this->info($this->importedPostCount . ' ' . Str::plural('Post', $this->importedPostCount) . ' Imported.');
-        $this->info($this->updatedPostCount . ' ' . Str::plural('Post', $this->updatedPostCount) . ' Updated.');
+        $this->info($this->importedPostCount.' '.Str::plural('Post', $this->importedPostCount).' Imported.');
+        $this->info($this->updatedPostCount.' '.Str::plural('Post', $this->updatedPostCount).' Updated.');
     }
 }
